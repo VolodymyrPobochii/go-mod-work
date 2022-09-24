@@ -1,4 +1,4 @@
-package generics_repos
+package internal
 
 import "github.com/pkg/errors"
 
