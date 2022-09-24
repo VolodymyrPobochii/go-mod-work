@@ -1,9 +1,9 @@
 package handling
 
 import (
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
-	"github.com/VolodymyrPobochii/go-mod-work/voyage"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/voyage"
 	"time"
 
 	"github.com/go-kit/kit/metrics"
@@ -24,8 +24,8 @@ func NewInstrumentingService(counter metrics.Counter, latency metrics.Histogram,
 	}
 }
 
-func (s *instrumentingService) RegisterHandlingEvent(completed time.Time, id cargo2.TrackingID, voyageNumber voyage.Number,
-	loc location.UNLocode, eventType cargo2.HandlingEventType) error {
+func (s *instrumentingService) RegisterHandlingEvent(completed time.Time, id cargo.TrackingID, voyageNumber voyage.Number,
+	loc location.UNLocode, eventType cargo.HandlingEventType) error {
 
 	defer func(begin time.Time) {
 		s.requestCount.With("method", "register_incident").Add(1)

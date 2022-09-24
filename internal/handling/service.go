@@ -4,10 +4,10 @@ package handling
 
 import (
 	"errors"
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/inspection"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
-	"github.com/VolodymyrPobochii/go-mod-work/voyage"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/inspection"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/voyage"
 	"time"
 )
 
@@ -16,26 +16,26 @@ var ErrInvalidArgument = errors.New("invalid argument")
 
 // EventHandler provides a means of subscribing to registered handling events.
 type EventHandler interface {
-	CargoWasHandled(cargo2.HandlingEvent)
+	CargoWasHandled(cargo.HandlingEvent)
 }
 
 // Service provides handling operations.
 type Service interface {
 	// RegisterHandlingEvent registers a handling event in the system, and
 	// notifies interested parties that a cargo has been handled.
-	RegisterHandlingEvent(completed time.Time, id cargo2.TrackingID, voyageNumber voyage.Number,
-		unLocode location.UNLocode, eventType cargo2.HandlingEventType) error
+	RegisterHandlingEvent(completed time.Time, id cargo.TrackingID, voyageNumber voyage.Number,
+		unLocode location.UNLocode, eventType cargo.HandlingEventType) error
 }
 
 type service struct {
-	handlingEventRepository cargo2.HandlingEventRepository
-	handlingEventFactory    cargo2.HandlingEventFactory
+	handlingEventRepository cargo.HandlingEventRepository
+	handlingEventFactory    cargo.HandlingEventFactory
 	handlingEventHandler    EventHandler
 }
 
-func (s *service) RegisterHandlingEvent(completed time.Time, id cargo2.TrackingID, voyageNumber voyage.Number,
-	loc location.UNLocode, eventType cargo2.HandlingEventType) error {
-	if completed.IsZero() || id == "" || loc == "" || eventType == cargo2.NotHandled {
+func (s *service) RegisterHandlingEvent(completed time.Time, id cargo.TrackingID, voyageNumber voyage.Number,
+	loc location.UNLocode, eventType cargo.HandlingEventType) error {
+	if completed.IsZero() || id == "" || loc == "" || eventType == cargo.NotHandled {
 		return ErrInvalidArgument
 	}
 
@@ -51,7 +51,7 @@ func (s *service) RegisterHandlingEvent(completed time.Time, id cargo2.TrackingI
 }
 
 // NewService creates a handling event service with necessary dependencies.
-func NewService(r cargo2.HandlingEventRepository, f cargo2.HandlingEventFactory, h EventHandler) Service {
+func NewService(r cargo.HandlingEventRepository, f cargo.HandlingEventFactory, h EventHandler) Service {
 	return &service{
 		handlingEventRepository: r,
 		handlingEventFactory:    f,
@@ -63,7 +63,7 @@ type handlingEventHandler struct {
 	InspectionService inspection.Service
 }
 
-func (h *handlingEventHandler) CargoWasHandled(event cargo2.HandlingEvent) {
+func (h *handlingEventHandler) CargoWasHandled(event cargo.HandlingEvent) {
 	h.InspectionService.InspectCargo(event.TrackingID)
 }
 

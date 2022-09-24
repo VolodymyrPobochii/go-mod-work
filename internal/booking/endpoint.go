@@ -2,8 +2,8 @@ package booking
 
 import (
 	"context"
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
 	"time"
 
 	"github.com/go-kit/kit/endpoint"
@@ -16,8 +16,8 @@ type bookCargoRequest struct {
 }
 
 type bookCargoResponse struct {
-	ID  cargo2.TrackingID `json:"tracking_id,omitempty"`
-	Err error             `json:"error,omitempty"`
+	ID  cargo.TrackingID `json:"tracking_id,omitempty"`
+	Err error            `json:"error,omitempty"`
 }
 
 func (r bookCargoResponse) error() error { return r.Err }
@@ -31,7 +31,7 @@ func makeBookCargoEndpoint(s Service) endpoint.Endpoint {
 }
 
 type loadCargoRequest struct {
-	ID cargo2.TrackingID
+	ID cargo.TrackingID
 }
 
 type loadCargoResponse struct {
@@ -50,12 +50,12 @@ func makeLoadCargoEndpoint(s Service) endpoint.Endpoint {
 }
 
 type requestRoutesRequest struct {
-	ID cargo2.TrackingID
+	ID cargo.TrackingID
 }
 
 type requestRoutesResponse struct {
-	Routes []cargo2.Itinerary `json:"routes,omitempty"`
-	Err    error              `json:"error,omitempty"`
+	Routes []cargo.Itinerary `json:"routes,omitempty"`
+	Err    error             `json:"error,omitempty"`
 }
 
 func (r requestRoutesResponse) error() error { return r.Err }
@@ -69,8 +69,8 @@ func makeRequestRoutesEndpoint(s Service) endpoint.Endpoint {
 }
 
 type assignToRouteRequest struct {
-	ID        cargo2.TrackingID
-	Itinerary cargo2.Itinerary
+	ID        cargo.TrackingID
+	Itinerary cargo.Itinerary
 }
 
 type assignToRouteResponse struct {
@@ -88,7 +88,7 @@ func makeAssignToRouteEndpoint(s Service) endpoint.Endpoint {
 }
 
 type changeDestinationRequest struct {
-	ID          cargo2.TrackingID
+	ID          cargo.TrackingID
 	Destination location.UNLocode
 }
 

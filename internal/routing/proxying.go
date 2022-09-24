@@ -3,9 +3,9 @@ package routing
 import (
 	"context"
 	"encoding/json"
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
-	"github.com/VolodymyrPobochii/go-mod-work/voyage"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/voyage"
 	"net/http"
 	"net/url"
 	"time"
@@ -21,22 +21,22 @@ type proxyService struct {
 	Service
 }
 
-func (s proxyService) FetchRoutesForSpecification(rs cargo2.RouteSpecification) []cargo2.Itinerary {
+func (s proxyService) FetchRoutesForSpecification(rs cargo.RouteSpecification) []cargo.Itinerary {
 	response, err := s.FetchRoutesEndpoint(s.Context, fetchRoutesRequest{
 		From: string(rs.Origin),
 		To:   string(rs.Destination),
 	})
 	if err != nil {
-		return []cargo2.Itinerary{}
+		return []cargo.Itinerary{}
 	}
 
 	resp := response.(fetchRoutesResponse)
 
-	var itineraries []cargo2.Itinerary
+	var itineraries []cargo.Itinerary
 	for _, r := range resp.Paths {
-		var legs []cargo2.Leg
+		var legs []cargo.Leg
 		for _, e := range r.Edges {
-			legs = append(legs, cargo2.Leg{
+			legs = append(legs, cargo.Leg{
 				VoyageNumber:   voyage.Number(e.Voyage),
 				LoadLocation:   location.UNLocode(e.Origin),
 				UnloadLocation: location.UNLocode(e.Destination),
@@ -45,7 +45,7 @@ func (s proxyService) FetchRoutesForSpecification(rs cargo2.RouteSpecification) 
 			})
 		}
 
-		itineraries = append(itineraries, cargo2.Itinerary{Legs: legs})
+		itineraries = append(itineraries, cargo.Itinerary{Legs: legs})
 	}
 
 	return itineraries

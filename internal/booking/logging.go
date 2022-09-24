@@ -1,8 +1,8 @@
 package booking
 
 import (
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
 	"time"
 
 	"github.com/go-kit/kit/log"
@@ -18,7 +18,7 @@ func NewLoggingService(logger log.Logger, s Service) Service {
 	return &loggingService{logger, s}
 }
 
-func (s *loggingService) BookNewCargo(origin location.UNLocode, destination location.UNLocode, deadline time.Time) (id cargo2.TrackingID, err error) {
+func (s *loggingService) BookNewCargo(origin location.UNLocode, destination location.UNLocode, deadline time.Time) (id cargo.TrackingID, err error) {
 	defer func(begin time.Time) {
 		s.logger.Log(
 			"method", "book",
@@ -32,7 +32,7 @@ func (s *loggingService) BookNewCargo(origin location.UNLocode, destination loca
 	return s.Service.BookNewCargo(origin, destination, deadline)
 }
 
-func (s *loggingService) LoadCargo(id cargo2.TrackingID) (c Cargo, err error) {
+func (s *loggingService) LoadCargo(id cargo.TrackingID) (c Cargo, err error) {
 	defer func(begin time.Time) {
 		s.logger.Log(
 			"method", "load",
@@ -44,7 +44,7 @@ func (s *loggingService) LoadCargo(id cargo2.TrackingID) (c Cargo, err error) {
 	return s.Service.LoadCargo(id)
 }
 
-func (s *loggingService) RequestPossibleRoutesForCargo(id cargo2.TrackingID) []cargo2.Itinerary {
+func (s *loggingService) RequestPossibleRoutesForCargo(id cargo.TrackingID) []cargo.Itinerary {
 	defer func(begin time.Time) {
 		s.logger.Log(
 			"method", "request_routes",
@@ -55,7 +55,7 @@ func (s *loggingService) RequestPossibleRoutesForCargo(id cargo2.TrackingID) []c
 	return s.Service.RequestPossibleRoutesForCargo(id)
 }
 
-func (s *loggingService) AssignCargoToRoute(id cargo2.TrackingID, itinerary cargo2.Itinerary) (err error) {
+func (s *loggingService) AssignCargoToRoute(id cargo.TrackingID, itinerary cargo.Itinerary) (err error) {
 	defer func(begin time.Time) {
 		s.logger.Log(
 			"method", "assign_to_route",
@@ -67,7 +67,7 @@ func (s *loggingService) AssignCargoToRoute(id cargo2.TrackingID, itinerary carg
 	return s.Service.AssignCargoToRoute(id, itinerary)
 }
 
-func (s *loggingService) ChangeDestination(id cargo2.TrackingID, l location.UNLocode) (err error) {
+func (s *loggingService) ChangeDestination(id cargo.TrackingID, l location.UNLocode) (err error) {
 	defer func(begin time.Time) {
 		s.logger.Log(
 			"method", "change_destination",

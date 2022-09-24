@@ -1,8 +1,8 @@
 package booking
 
 import (
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
 	"time"
 
 	"github.com/go-kit/kit/metrics"
@@ -23,7 +23,7 @@ func NewInstrumentingService(counter metrics.Counter, latency metrics.Histogram,
 	}
 }
 
-func (s *instrumentingService) BookNewCargo(origin, destination location.UNLocode, deadline time.Time) (cargo2.TrackingID, error) {
+func (s *instrumentingService) BookNewCargo(origin, destination location.UNLocode, deadline time.Time) (cargo.TrackingID, error) {
 	defer func(begin time.Time) {
 		s.requestCount.With("method", "book").Add(1)
 		s.requestLatency.With("method", "book").Observe(time.Since(begin).Seconds())
@@ -32,7 +32,7 @@ func (s *instrumentingService) BookNewCargo(origin, destination location.UNLocod
 	return s.Service.BookNewCargo(origin, destination, deadline)
 }
 
-func (s *instrumentingService) LoadCargo(id cargo2.TrackingID) (c Cargo, err error) {
+func (s *instrumentingService) LoadCargo(id cargo.TrackingID) (c Cargo, err error) {
 	defer func(begin time.Time) {
 		s.requestCount.With("method", "load").Add(1)
 		s.requestLatency.With("method", "load").Observe(time.Since(begin).Seconds())
@@ -41,7 +41,7 @@ func (s *instrumentingService) LoadCargo(id cargo2.TrackingID) (c Cargo, err err
 	return s.Service.LoadCargo(id)
 }
 
-func (s *instrumentingService) RequestPossibleRoutesForCargo(id cargo2.TrackingID) []cargo2.Itinerary {
+func (s *instrumentingService) RequestPossibleRoutesForCargo(id cargo.TrackingID) []cargo.Itinerary {
 	defer func(begin time.Time) {
 		s.requestCount.With("method", "request_routes").Add(1)
 		s.requestLatency.With("method", "request_routes").Observe(time.Since(begin).Seconds())
@@ -50,7 +50,7 @@ func (s *instrumentingService) RequestPossibleRoutesForCargo(id cargo2.TrackingI
 	return s.Service.RequestPossibleRoutesForCargo(id)
 }
 
-func (s *instrumentingService) AssignCargoToRoute(id cargo2.TrackingID, itinerary cargo2.Itinerary) (err error) {
+func (s *instrumentingService) AssignCargoToRoute(id cargo.TrackingID, itinerary cargo.Itinerary) (err error) {
 	defer func(begin time.Time) {
 		s.requestCount.With("method", "assign_to_route").Add(1)
 		s.requestLatency.With("method", "assign_to_route").Observe(time.Since(begin).Seconds())
@@ -59,7 +59,7 @@ func (s *instrumentingService) AssignCargoToRoute(id cargo2.TrackingID, itinerar
 	return s.Service.AssignCargoToRoute(id, itinerary)
 }
 
-func (s *instrumentingService) ChangeDestination(id cargo2.TrackingID, l location.UNLocode) (err error) {
+func (s *instrumentingService) ChangeDestination(id cargo.TrackingID, l location.UNLocode) (err error) {
 	defer func(begin time.Time) {
 		s.requestCount.With("method", "change_destination").Add(1)
 		s.requestLatency.With("method", "change_destination").Observe(time.Since(begin).Seconds())

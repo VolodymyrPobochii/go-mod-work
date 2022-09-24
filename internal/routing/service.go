@@ -4,12 +4,12 @@
 package routing
 
 import (
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
 )
 
 // Service provides access to an external routing service.
 type Service interface {
 	// FetchRoutesForSpecification finds all possible routes that satisfy a
 	// given specification.
-	FetchRoutesForSpecification(rs cargo2.RouteSpecification) []cargo2.Itinerary
+	FetchRoutesForSpecification(rs cargo.RouteSpecification) []cargo.Itinerary
 }

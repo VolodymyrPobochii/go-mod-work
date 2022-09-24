@@ -2,19 +2,19 @@ package handling
 
 import (
 	"context"
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
-	"github.com/VolodymyrPobochii/go-mod-work/voyage"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/voyage"
 	"time"
 
 	"github.com/go-kit/kit/endpoint"
 )
 
 type registerIncidentRequest struct {
-	ID             cargo2.TrackingID
+	ID             cargo.TrackingID
 	Location       location.UNLocode
 	Voyage         voyage.Number
-	EventType      cargo2.HandlingEventType
+	EventType      cargo.HandlingEventType
 	CompletionTime time.Time
 }
 

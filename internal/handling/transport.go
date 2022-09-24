@@ -3,9 +3,9 @@ package handling
 import (
 	"context"
 	"encoding/json"
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
-	"github.com/VolodymyrPobochii/go-mod-work/voyage"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/voyage"
 	"net/http"
 	"time"
 
@@ -52,20 +52,20 @@ func decodeRegisterIncidentRequest(_ context.Context, r *http.Request) (interfac
 
 	return registerIncidentRequest{
 		CompletionTime: body.CompletionTime,
-		ID:             cargo2.TrackingID(body.TrackingID),
+		ID:             cargo.TrackingID(body.TrackingID),
 		Voyage:         voyage.Number(body.VoyageNumber),
 		Location:       location.UNLocode(body.Location),
 		EventType:      stringToEventType(body.EventType),
 	}, nil
 }
 
-func stringToEventType(s string) cargo2.HandlingEventType {
-	types := map[string]cargo2.HandlingEventType{
-		cargo2.Receive.String(): cargo2.Receive,
-		cargo2.Load.String():    cargo2.Load,
-		cargo2.Unload.String():  cargo2.Unload,
-		cargo2.Customs.String(): cargo2.Customs,
-		cargo2.Claim.String():   cargo2.Claim,
+func stringToEventType(s string) cargo.HandlingEventType {
+	types := map[string]cargo.HandlingEventType{
+		cargo.Receive.String(): cargo.Receive,
+		cargo.Load.String():    cargo.Load,
+		cargo.Unload.String():  cargo.Unload,
+		cargo.Customs.String(): cargo.Customs,
+		cargo.Claim.String():   cargo.Claim,
 	}
 	return types[s]
 }
@@ -87,7 +87,7 @@ type errorer interface {
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	switch err {
-	case cargo2.ErrUnknown:
+	case cargo.ErrUnknown:
 		w.WriteHeader(http.StatusNotFound)
 	case ErrInvalidArgument:
 		w.WriteHeader(http.StatusBadRequest)

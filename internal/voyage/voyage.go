@@ -3,7 +3,7 @@ package voyage
 
 import (
 	"errors"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
 	"time"
 )
 

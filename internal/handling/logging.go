@@ -1,9 +1,9 @@
 package handling
 
 import (
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
-	"github.com/VolodymyrPobochii/go-mod-work/voyage"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/voyage"
 	"time"
 
 	"github.com/go-kit/kit/log"
@@ -19,8 +19,8 @@ func NewLoggingService(logger log.Logger, s Service) Service {
 	return &loggingService{logger, s}
 }
 
-func (s *loggingService) RegisterHandlingEvent(completed time.Time, id cargo2.TrackingID, voyageNumber voyage.Number,
-	unLocode location.UNLocode, eventType cargo2.HandlingEventType) (err error) {
+func (s *loggingService) RegisterHandlingEvent(completed time.Time, id cargo.TrackingID, voyageNumber voyage.Number,
+	unLocode location.UNLocode, eventType cargo.HandlingEventType) (err error) {
 	defer func(begin time.Time) {
 		s.logger.Log(
 			"method", "register_incident",

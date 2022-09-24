@@ -4,8 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
 	"net/http"
 	"time"
 
@@ -105,7 +105,7 @@ func decodeLoadCargoRequest(_ context.Context, r *http.Request) (interface{}, er
 	if !ok {
 		return nil, errBadRoute
 	}
-	return loadCargoRequest{ID: cargo2.TrackingID(id)}, nil
+	return loadCargoRequest{ID: cargo.TrackingID(id)}, nil
 }
 
 func decodeRequestRoutesRequest(_ context.Context, r *http.Request) (interface{}, error) {
@@ -114,7 +114,7 @@ func decodeRequestRoutesRequest(_ context.Context, r *http.Request) (interface{}
 	if !ok {
 		return nil, errBadRoute
 	}
-	return requestRoutesRequest{ID: cargo2.TrackingID(id)}, nil
+	return requestRoutesRequest{ID: cargo.TrackingID(id)}, nil
 }
 
 func decodeAssignToRouteRequest(_ context.Context, r *http.Request) (interface{}, error) {
@@ -124,13 +124,13 @@ func decodeAssignToRouteRequest(_ context.Context, r *http.Request) (interface{}
 		return nil, errBadRoute
 	}
 
-	var itinerary cargo2.Itinerary
+	var itinerary cargo.Itinerary
 	if err := json.NewDecoder(r.Body).Decode(&itinerary); err != nil {
 		return nil, err
 	}
 
 	return assignToRouteRequest{
-		ID:        cargo2.TrackingID(id),
+		ID:        cargo.TrackingID(id),
 		Itinerary: itinerary,
 	}, nil
 }
@@ -151,7 +151,7 @@ func decodeChangeDestinationRequest(_ context.Context, r *http.Request) (interfa
 	}
 
 	return changeDestinationRequest{
-		ID:          cargo2.TrackingID(id),
+		ID:          cargo.TrackingID(id),
 		Destination: location.UNLocode(body.Destination),
 	}, nil
 }
@@ -181,7 +181,7 @@ type errorer interface {
 func encodeError(_ context.Context, err error, w http.ResponseWriter) {
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
 	switch err {
-	case cargo2.ErrUnknown:
+	case cargo.ErrUnknown:
 		w.WriteHeader(http.StatusNotFound)
 	case ErrInvalidArgument:
 		w.WriteHeader(http.StatusBadRequest)

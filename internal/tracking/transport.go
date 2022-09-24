@@ -4,7 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"github.com/VolodymyrPobochii/go-mod-work/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
 	"net/http"
 
 	"github.com/gorilla/mux"

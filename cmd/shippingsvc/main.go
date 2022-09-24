@@ -4,14 +4,14 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	booking2 "github.com/VolodymyrPobochii/go-mod-work/booking"
-	cargo2 "github.com/VolodymyrPobochii/go-mod-work/cargo"
-	handling2 "github.com/VolodymyrPobochii/go-mod-work/handling"
-	"github.com/VolodymyrPobochii/go-mod-work/inmem"
-	"github.com/VolodymyrPobochii/go-mod-work/inspection"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
-	routing2 "github.com/VolodymyrPobochii/go-mod-work/routing"
-	tracking2 "github.com/VolodymyrPobochii/go-mod-work/tracking"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/booking"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/cargo"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/handling"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/inmem"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/inspection"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/routing"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/tracking"
 	"net/http"
 	"os"
 	"os/signal"
@@ -56,12 +56,12 @@ func main() {
 
 	// Configure some questionable dependencies.
 	var (
-		handlingEventFactory = cargo2.HandlingEventFactory{
+		handlingEventFactory = cargo.HandlingEventFactory{
 			CargoRepository:    cargos,
 			VoyageRepository:   voyages,
 			LocationRepository: locations,
 		}
-		handlingEventHandler = handling2.NewEventHandler(
+		handlingEventHandler = handling.NewEventHandler(
 			inspection.NewService(cargos, handlingEvents, nil),
 		)
 	)
@@ -71,13 +71,13 @@ func main() {
 
 	fieldKeys := []string{"method"}
 
-	var rs routing2.Service
-	rs = routing2.NewProxyingMiddleware(ctx, *routingServiceURL)(rs)
+	var rs routing.Service
+	rs = routing.NewProxyingMiddleware(ctx, *routingServiceURL)(rs)
 
-	var bs booking2.Service
-	bs = booking2.NewService(cargos, locations, handlingEvents, rs)
-	bs = booking2.NewLoggingService(log.With(logger, "component", "booking"), bs)
-	bs = booking2.NewInstrumentingService(
+	var bs booking.Service
+	bs = booking.NewService(cargos, locations, handlingEvents, rs)
+	bs = booking.NewLoggingService(log.With(logger, "component", "booking"), bs)
+	bs = booking.NewInstrumentingService(
 		kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
 			Namespace: "api",
 			Subsystem: "booking_service",
@@ -93,10 +93,10 @@ func main() {
 		bs,
 	)
 
-	var ts tracking2.Service
-	ts = tracking2.NewService(cargos, handlingEvents)
-	ts = tracking2.NewLoggingService(log.With(logger, "component", "tracking"), ts)
-	ts = tracking2.NewInstrumentingService(
+	var ts tracking.Service
+	ts = tracking.NewService(cargos, handlingEvents)
+	ts = tracking.NewLoggingService(log.With(logger, "component", "tracking"), ts)
+	ts = tracking.NewInstrumentingService(
 		kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
 			Namespace: "api",
 			Subsystem: "tracking_service",
@@ -112,10 +112,10 @@ func main() {
 		ts,
 	)
 
-	var hs handling2.Service
-	hs = handling2.NewService(handlingEvents, handlingEventFactory, handlingEventHandler)
-	hs = handling2.NewLoggingService(log.With(logger, "component", "handling"), hs)
-	hs = handling2.NewInstrumentingService(
+	var hs handling.Service
+	hs = handling.NewService(handlingEvents, handlingEventFactory, handlingEventHandler)
+	hs = handling.NewLoggingService(log.With(logger, "component", "handling"), hs)
+	hs = handling.NewInstrumentingService(
 		kitprometheus.NewCounterFrom(stdprometheus.CounterOpts{
 			Namespace: "api",
 			Subsystem: "handling_service",
@@ -135,9 +135,9 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.Handle("/booking/v1/", booking2.MakeHandler(bs, httpLogger))
-	mux.Handle("/tracking/v1/", tracking2.MakeHandler(ts, httpLogger))
-	mux.Handle("/handling/v1/", handling2.MakeHandler(hs, httpLogger))
+	mux.Handle("/booking/v1/", booking.MakeHandler(bs, httpLogger))
+	mux.Handle("/tracking/v1/", tracking.MakeHandler(ts, httpLogger))
+	mux.Handle("/handling/v1/", handling.MakeHandler(hs, httpLogger))
 
 	http.Handle("/", accessControl(mux))
 	http.Handle("/metrics", promhttp.Handler())
@@ -178,8 +178,8 @@ func envString(env, fallback string) string {
 	return e
 }
 
-func storeTestData(r cargo2.Repository) {
-	test1 := cargo2.New("FTL456", cargo2.RouteSpecification{
+func storeTestData(r cargo.Repository) {
+	test1 := cargo.New("FTL456", cargo.RouteSpecification{
 		Origin:          location.AUMEL,
 		Destination:     location.SESTO,
 		ArrivalDeadline: time.Now().AddDate(0, 0, 7),
@@ -188,7 +188,7 @@ func storeTestData(r cargo2.Repository) {
 		panic(err)
 	}
 
-	test2 := cargo2.New("ABC123", cargo2.RouteSpecification{
+	test2 := cargo.New("ABC123", cargo.RouteSpecification{
 		Origin:          location.SESTO,
 		Destination:     location.CNHKG,
 		ArrivalDeadline: time.Now().AddDate(0, 0, 14),

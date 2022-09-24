@@ -3,7 +3,7 @@ package cargo
 
 import (
 	"errors"
-	"github.com/VolodymyrPobochii/go-mod-work/location"
+	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
 	"strings"
 	"time"
 
