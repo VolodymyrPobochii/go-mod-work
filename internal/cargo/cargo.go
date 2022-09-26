@@ -3,6 +3,7 @@ package cargo
 
 import (
 	"errors"
+	"github.com/VolodymyrPobochii/go-mod-work/internal"
 	"github.com/VolodymyrPobochii/go-mod-work/internal/location"
 	"strings"
 	"time"
@@ -55,9 +56,7 @@ func New(id TrackingID, rs RouteSpecification) *Cargo {
 
 // Repository provides access to a cargo store.
 type Repository interface {
-	Store(cargo *Cargo) error
-	Find(id TrackingID) (*Cargo, error)
-	FindAll() []*Cargo
+	internal.CrudRepository[Cargo, TrackingID]
 }
 
 // ErrUnknown is used when a cargo could not be found.

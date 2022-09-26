@@ -13,14 +13,28 @@ type cargoRepository struct {
 	cargos map[cargo.TrackingID]*cargo.Cargo
 }
 
-func (r *cargoRepository) Store(c *cargo.Cargo) error {
+func (r *cargoRepository) Save(c cargo.Cargo) error {
 	r.mtx.Lock()
 	defer r.mtx.Unlock()
-	r.cargos[c.TrackingID] = c
+	r.cargos[c.TrackingID] = &c
 	return nil
 }
 
-func (r *cargoRepository) Find(id cargo.TrackingID) (*cargo.Cargo, error) {
+func (r *cargoRepository) Delete(c cargo.Cargo) error {
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+	delete(r.cargos, c.TrackingID)
+	return nil
+}
+
+func (r *cargoRepository) Exists(id cargo.TrackingID) (bool, error) {
+	r.mtx.Lock()
+	defer r.mtx.Unlock()
+	_, ok := r.cargos[id]
+	return ok, nil
+}
+
+func (r *cargoRepository) FindOne(id cargo.TrackingID) (*cargo.Cargo, error) {
 	r.mtx.RLock()
 	defer r.mtx.RUnlock()
 	if val, ok := r.cargos[id]; ok {
@@ -29,14 +43,14 @@ func (r *cargoRepository) Find(id cargo.TrackingID) (*cargo.Cargo, error) {
 	return nil, cargo.ErrUnknown
 }
 
-func (r *cargoRepository) FindAll() []*cargo.Cargo {
+func (r *cargoRepository) FindAll() ([]cargo.Cargo, error) {
 	r.mtx.RLock()
 	defer r.mtx.RUnlock()
-	c := make([]*cargo.Cargo, 0, len(r.cargos))
+	c := make([]cargo.Cargo, 0, len(r.cargos))
 	for _, val := range r.cargos {
-		c = append(c, val)
+		c = append(c, *val)
 	}
-	return c
+	return c, nil
 }
 
 // NewCargoRepository returns a new instance of a in-memory cargo repository.

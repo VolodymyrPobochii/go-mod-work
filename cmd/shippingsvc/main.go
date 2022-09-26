@@ -184,7 +184,7 @@ func storeTestData(r cargo.Repository) {
 		Destination:     location.SESTO,
 		ArrivalDeadline: time.Now().AddDate(0, 0, 7),
 	})
-	if err := r.Store(test1); err != nil {
+	if err := r.Save(*test1); err != nil {
 		panic(err)
 	}
 
@@ -193,7 +193,7 @@ func storeTestData(r cargo.Repository) {
 		Destination:     location.CNHKG,
 		ArrivalDeadline: time.Now().AddDate(0, 0, 14),
 	})
-	if err := r.Store(test2); err != nil {
+	if err := r.Save(*test2); err != nil {
 		panic(err)
 	}
 }

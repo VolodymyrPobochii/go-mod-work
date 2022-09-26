@@ -94,7 +94,7 @@ type HandlingEventFactory struct {
 func (f *HandlingEventFactory) CreateHandlingEvent(registered time.Time, completed time.Time, id TrackingID,
 	voyageNumber voyage.Number, unLocode location.UNLocode, eventType HandlingEventType) (HandlingEvent, error) {
 
-	if _, err := f.CargoRepository.Find(id); err != nil {
+	if _, err := f.CargoRepository.FindOne(id); err != nil {
 		return HandlingEvent{}, err
 	}
 
