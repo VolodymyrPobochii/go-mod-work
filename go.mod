@@ -8,7 +8,7 @@ require (
 	github.com/pborman/uuid v1.2.1
 	github.com/pkg/errors v0.9.1
 	github.com/prometheus/client_golang v1.13.0
-	google.golang.org/grpc v1.49.0
+	go.uber.org/zap v1.19.1
 )
 
 require (
@@ -26,7 +26,8 @@ require (
 	github.com/smartystreets/goconvey v1.7.2 // indirect
 	github.com/sony/gobreaker v0.4.1 // indirect
 	github.com/streadway/handy v0.0.0-20200128134331-0f66f006fb2e // indirect
+	go.uber.org/atomic v1.9.0 // indirect
+	go.uber.org/multierr v1.7.0 // indirect
 	golang.org/x/sys v0.0.0-20220520151302-bc2c85ada10a // indirect
-	google.golang.org/genproto v0.0.0-20210917145530-b395a37504d4 // indirect
 	google.golang.org/protobuf v1.28.1 // indirect
 )
