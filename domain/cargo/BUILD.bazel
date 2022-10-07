@@ -1,0 +1,25 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "cargo",
+    srcs = [
+        "cargo.go",
+        "delivery.go",
+        "handling.go",
+        "itinerary.go",
+    ],
+    importpath = "github.com/VolodymyrPobochii/go-mod-work/domain/cargo",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//domain",
+        "//domain/location",
+        "//domain/voyage",
+        "@com_github_pborman_uuid//:uuid",
+    ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":cargo",
+    visibility = ["//visibility:public"],
+)

@@ -4,6 +4,7 @@ package booking
 
 import (
 	"errors"
+	"github.com/VolodymyrPobochii/go-mod-work/data/inmem"
 	"github.com/VolodymyrPobochii/go-mod-work/domain/cargo"
 	"github.com/VolodymyrPobochii/go-mod-work/domain/location"
 	"github.com/VolodymyrPobochii/go-mod-work/domain/routing"
@@ -158,6 +159,7 @@ func (s *service) Locations() []Location {
 
 // NewService creates a booking service with necessary dependencies.
 func NewService(cargos cargo.Repository, locations location.Repository, events cargo.HandlingEventRepository, rs routing.Service) Service {
+	_ = inmem.NewLocationRepository()
 	return &service{
 		cargos:         cargos,
 		locations:      locations,

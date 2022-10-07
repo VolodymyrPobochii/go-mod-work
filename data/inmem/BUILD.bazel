@@ -1,0 +1,19 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "inmem",
+    srcs = ["inmem.go"],
+    importpath = "github.com/VolodymyrPobochii/go-mod-work/data/inmem",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//domain/cargo",
+        "//domain/location",
+        "//domain/voyage",
+    ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":inmem",
+    visibility = ["//visibility:public"],
+)

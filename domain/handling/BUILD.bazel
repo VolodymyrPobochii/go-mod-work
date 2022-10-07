@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "handling",
+    srcs = ["service.go"],
+    importpath = "github.com/VolodymyrPobochii/go-mod-work/domain/handling",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//domain/cargo",
+        "//domain/inspection",
+        "//domain/location",
+        "//domain/voyage",
+    ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":handling",
+    visibility = ["//visibility:public"],
+)

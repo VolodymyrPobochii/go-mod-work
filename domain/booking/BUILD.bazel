@@ -1,0 +1,20 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "booking",
+    srcs = ["service.go"],
+    importpath = "github.com/VolodymyrPobochii/go-mod-work/domain/booking",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//data/inmem",
+        "//domain/cargo",
+        "//domain/location",
+        "//domain/routing",
+    ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":booking",
+    visibility = ["//visibility:public"],
+)

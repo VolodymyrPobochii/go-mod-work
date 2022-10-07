@@ -1,6 +1,8 @@
 package domain
 
-import "github.com/pkg/errors"
+import (
+	"github.com/pkg/errors"
+)
 
 var _ Repository = (*usersRepo)(nil)
 var _ CrudRepository[User, string] = (*usersRepo)(nil)

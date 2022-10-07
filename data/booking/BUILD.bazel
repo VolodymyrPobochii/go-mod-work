@@ -1,0 +1,30 @@
+load("@io_bazel_rules_go//go:def.bzl", "go_library")
+
+go_library(
+    name = "booking",
+    srcs = [
+        "endpoint.go",
+        "instrumenting.go",
+        "logging.go",
+        "transport.go",
+    ],
+    importpath = "github.com/VolodymyrPobochii/go-mod-work/data/booking",
+    visibility = ["//visibility:public"],
+    deps = [
+        "//domain/booking",
+        "//domain/cargo",
+        "//domain/location",
+        "@com_github_go_kit_kit//endpoint",
+        "@com_github_go_kit_kit//log",
+        "@com_github_go_kit_kit//metrics",
+        "@com_github_go_kit_kit//transport",
+        "@com_github_go_kit_kit//transport/http",
+        "@com_github_gorilla_mux//:mux",
+    ],
+)
+
+alias(
+    name = "go_default_library",
+    actual = ":booking",
+    visibility = ["//visibility:public"],
+)
